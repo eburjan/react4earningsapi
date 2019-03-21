@@ -40,15 +40,19 @@ class App extends Component {
     let WEEKLY_ATR_3_AVG=0;
     let WEEKLY_ATR_3_MIN=Number.MAX_SAFE_INTEGER;
     let WEEKLY_ATR_3_CTR=0;
-
+    let ujcount=count;
     for(var i=0;i<count+3;i++)
     {
+      if(values[i]==undefined){
+        ujcount--;
+        continue;
+      }
       let subvaluesArray=Object.values(values[i]);
       //console.log(subvaluesArray);
       WEEKLY_ATR_1.push(Math.abs(Number(subvaluesArray[1]-Number(subvaluesArray[2]))));
     }
 
-    for(var j=0;j<count;j++)
+    for(var j=0;j<ujcount;j++)
     {
       let avg3=WEEKLY_ATR_1[j]+WEEKLY_ATR_1[j+1]+WEEKLY_ATR_1[j+2];
       avg3/=3;
@@ -91,9 +95,12 @@ class App extends Component {
     let weeklykeys=Object.keys(jsonobj['Weekly Time Series']);
     const weeklies = Object.entries(jsonobj['Weekly Time Series']);
 
-    let result50=this.getatrinfo(50, Object.values(jsonobj['Weekly Time Series']));
-    let result100=this.getatrinfo(100, Object.values(jsonobj['Weekly Time Series']));
-    let result300=this.getatrinfo(300, Object.values(jsonobj['Weekly Time Series']));
+    let i50=Math.min(50,weeklies.length);
+    let i100=Math.min(100,weeklies.length);
+    let i300=Math.min(300,weeklies.length);
+    let result50=this.getatrinfo(i50, Object.values(jsonobj['Weekly Time Series']));    
+    let result100=this.getatrinfo(i100, Object.values(jsonobj['Weekly Time Series']));
+    let result300=this.getatrinfo(i300, Object.values(jsonobj['Weekly Time Series']));
     //console.log(result50);
 
     return (
@@ -108,15 +115,15 @@ class App extends Component {
         <p className="tc ba">
           LASTDATA: {JSON.stringify(weeklykeys[0])} , RECORDS: {weeklies.length}
         </p>
-        <h3>RESULT50</h3>
+        <h3>RESULT{i50}</h3>
         <p className="tc ba">
           {JSON.stringify(result50)}
         </p>
-        <h3>RESULT100</h3>
+        <h3>RESULT{i100}</h3>
         <p className="tc ba">
           {JSON.stringify(result100)}
         </p>
-        <h3>RESULT300</h3>
+        <h3>RESULT{i300}</h3>
         <p className="tc ba">
           {JSON.stringify(result300)}
         </p>
