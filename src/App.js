@@ -40,6 +40,7 @@ class App extends Component {
     let WEEKLY_ATR_3_AVG=0;
     let WEEKLY_ATR_3_MIN=Number.MAX_SAFE_INTEGER;
     let WEEKLY_ATR_3_CTR=0;
+    let WEEKLY_ATR_3_MAX=-1;
     let ujcount=count;
     for(var i=0;i<count+3;i++)
     {
@@ -59,6 +60,7 @@ class App extends Component {
       WEEKLY_ATR_3.push(avg3);
       if(avg3<WEEKLY_ATR_3_MIN)WEEKLY_ATR_3_MIN=avg3;
       WEEKLY_ATR_3_AVG+=avg3;
+      if(avg3>WEEKLY_ATR_3_MAX)WEEKLY_ATR_3_MAX=avg3;
     }
 
     WEEKLY_ATR_3_AVG/=count;
@@ -71,6 +73,7 @@ class App extends Component {
 
     return {
       "MIN": WEEKLY_ATR_3_MIN.toFixed(2),
+      "MAX": WEEKLY_ATR_3_MAX.toFixed(2),
       "AVG": WEEKLY_ATR_3_AVG.toFixed(2),
       "CTR": WEEKLY_ATR_3_CTR.toFixed(2)
     };
@@ -127,7 +130,15 @@ class App extends Component {
         <p className="tc ba">
           {JSON.stringify(result300)}
         </p>
-        <h3>CTR VECTOR: [ {result50["CTR"]} {result100["CTR"]} {result300["CTR"]} ]</h3>
+        <p className="tc ba">CTR VECTOR: [ {result50["CTR"]} {result100["CTR"]} {result300["CTR"]} ]</p>
+        <h3>Details50</h3>
+        <p className="tc ba">
+          {result50["CTR"]}|{result50["MIN"]}:{result50["AVG"]}:{result50["MAX"]}|{(result50["AVG"]-result50["MIN"]).toFixed(2)}:{(result50["MAX"]-result50["AVG"]).toFixed(2)}|{(result50["AVG"]/result50["CTR"]).toFixed(2)}
+        </p>
+        <h3>Compact50</h3>
+        <p className="tc ba">
+          {result50["CTR"]}, {(result50["AVG"]/result50["CTR"]).toFixed(2)} | {result50["MIN"]}:{result50["AVG"]}:{result50["MAX"]}
+        </p>
       </div>
     );
   }
