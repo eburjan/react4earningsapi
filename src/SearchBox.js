@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchBox = ({searchChange,clicked}) =>
+const SearchBox = ({searchChange,clicked,earningsclick}) =>
 {
     return (
         <div className='pa2'>
@@ -11,10 +11,16 @@ const SearchBox = ({searchChange,clicked}) =>
                 onChange={searchChange}
                 />
             <input 
-                className='f6 link dim br2 ph5 pv3 ml3 mb2 dib white bg-mid-gray'
+                className='f4 link dim br2 ph5 pv3 ml3 mb2 dib white bg-mid-gray'
                 type='button' 
-                value='get'
+                value='getctr'
                 onClick={clicked}
+                />                
+            <input 
+                className='f4 link dim br2 ph5 pv3 ml3 mb2 dib dark-red bg-light-yellow'
+                type='button' 
+                value='earnings'
+                onClick={earningsclick}
                 />                
         </div>
     );
