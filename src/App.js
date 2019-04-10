@@ -47,7 +47,7 @@ class App extends Component {
   {
     let url="https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
     console.log(Date.now()+", url:"+url);
-    fetch(url, {mode: 'no-cors'}).then(response=>
+    fetch(url).then(response=>
     {
         return response.json();
     }).then(tombelem=>{
