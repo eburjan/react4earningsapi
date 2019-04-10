@@ -45,7 +45,7 @@ class App extends Component {
 
   queryOneDate=()=>
   {
-    let url="http://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
+    let url="https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
     console.log(Date.now()+", url:"+url);
     fetch(url, {mode: 'no-cors'}).then(response=>
     {
