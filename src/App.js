@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import SearchBox from './SearchBox';
 import {tickerquery} from './tickerquery';
 import {tickerwatchlist} from './watchlist';
+import { isUndefined } from 'util';
+import axios from 'axios'
 
 class App extends Component {
 
@@ -45,19 +47,33 @@ class App extends Component {
 
   queryOneDate=()=>
   {
-    let url="https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
+    let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
+    //let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex+2];
+/*
+    axios({
+      method:'get',
+      url:url
+    })
+      .then(function(response) {
+      console.log(response.text)
+    });*/
+
+
     console.log(Date.now()+", url:"+url);
+    
     fetch(url).then(response=>
     {
+      //console.log(response.text);
         return response.json();
     }).then(tombelem=>{
       //console.log(tombelem);
       return this.setState({queryresult: tombelem, querydate: this.state.daterange[this.state.datumindex]});
     });
     this.state.datumindex++;
+    
     if(this.state.datumindex<9){
       //function() { startTimer(parm1); }
-      setTimeout(this.queryOneDate, 5000);
+      setTimeout(this.queryOneDate, 3000);
     }
   }
 
@@ -99,6 +115,7 @@ class App extends Component {
     let WEEKLY_ATR_3_CTR=0;
     let WEEKLY_ATR_3_MAX=-1;
     let ujcount=count;
+    let mark=undefined;
     for(var i=0;i<count+3;i++)
     {
       if(values[i]===undefined){
@@ -108,6 +125,10 @@ class App extends Component {
       let subvaluesArray=Object.values(values[i]);
       //console.log(subvaluesArray);
       WEEKLY_ATR_1.push(Math.abs(Number(subvaluesArray[1]-Number(subvaluesArray[2]))));
+      if(isUndefined(mark))
+      {
+        mark=subvaluesArray[3];
+      }
     }
 
     for(var j=0;j<ujcount;j++)
@@ -132,27 +153,31 @@ class App extends Component {
       "MIN": WEEKLY_ATR_3_MIN.toFixed(2),
       "MAX": WEEKLY_ATR_3_MAX.toFixed(2),
       "AVG": WEEKLY_ATR_3_AVG.toFixed(2),
-      "CTR": WEEKLY_ATR_3_CTR.toFixed(2)
+      "CTR": WEEKLY_ATR_3_CTR.toFixed(2),
+      "%MARK": (WEEKLY_ATR_3_AVG*100/mark).toFixed(0)
     };
   }
 
   render() {
     if(this.state.lastuimode==="EARNINGS")
     {
-      let eventtickers=[];
       let tickerinfos=Object.values(this.state.queryresult);
       this.state.userresult.push(this.state.querydate);
-      for(let t=0;t<tickerinfos.count;t++)
+      //console.log(tickerinfos.length);
+      for(let t=0;t<tickerinfos.length;t++)
       {
-        let ticker=tickerinfos[t]["ticker"];
-        let when=tickerinfos[t]["when"];
+        //console.log(tickerinfos[t]);
+        let ticker=tickerinfos[t].ticker;
+        let when=tickerinfos[t].when;
+        //console.log(ticker);console.log(when);
         if(tickerwatchlist.indexOf(ticker) > -1)
         {
           this.state.userresult.push(ticker+" ("+when+")");
         }
       }
-      const resultcomponent=this.state.userresult.map((sv)=>{
-        return <br>{sv}</br>;
+      const resultcomponent=this.state.userresult.map(function(sv, i){
+        //console.log(String(sv));
+        return <div key={i}>{sv}</div>;
       });
       return (
         <div className="tc">
@@ -209,7 +234,7 @@ class App extends Component {
           </p>
           <h3>Compact50</h3>
           <p className="tc ba">
-            {result50["CTR"]}, {(result50["AVG"]/result50["CTR"]).toFixed(2)} | {result50["MIN"]}:{result50["AVG"]}:{result50["MAX"]}
+            {result50["CTR"]}, {(result50["AVG"]/result50["CTR"]).toFixed(2)} | %{result50["%MARK"]} | {result50["MIN"]}:{result50["AVG"]}:{result50["MAX"]}
           </p>
         </div>
       );
