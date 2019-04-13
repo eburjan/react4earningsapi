@@ -47,7 +47,8 @@ class App extends Component {
 
   queryOneDate=()=>
   {
-    let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex];
+    const actualdateindex=this.state.datumindex;
+    let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[actualdateindex];
     //let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex+2];
 /*
     axios({
@@ -67,10 +68,10 @@ class App extends Component {
         return response.json();
     }).then(tombelem=>{
       //console.log(tombelem);
-      return this.setState({queryresult: tombelem, querydate: this.state.daterange[this.state.datumindex]});
+      return this.setState({queryresult: tombelem, querydate: this.state.daterange[actualdateindex]});
     });
-    this.state.datumindex++;
     
+    this.state.datumindex++;
     if(this.state.datumindex<9){
       //function() { startTimer(parm1); }
       setTimeout(this.queryOneDate, 3000);
