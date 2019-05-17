@@ -22,7 +22,10 @@ class App extends Component {
           userresult:[],
           datumindex:0
       }
+      this.hanynapotKeressen=25;
   }
+
+
 
   searchBoxChangeHandler=(event)=>
   {
@@ -69,10 +72,13 @@ class App extends Component {
     }).then(tombelem=>{
       //console.log(tombelem);
       return this.setState({queryresult: tombelem, querydate: this.state.daterange[actualdateindex]});
+    }).catch(error=>{
+      this.state.datumindex=this.hanynapotKeressen;
+      return this.setState({queryresult: error, querydate: this.state.daterange[actualdateindex]});
     });
     
     this.state.datumindex++;
-    if(this.state.datumindex<9){
+    if(this.state.datumindex<this.hanynapotKeressen){
       //function() { startTimer(parm1); }
       setTimeout(this.queryOneDate, 3000);
     }
@@ -85,7 +91,7 @@ class App extends Component {
     this.state.earningsqueryrunning=true;
     let today = new Date();
     var datumlista=[];
-    for(var i=0;i<9;i++)
+    for(var i=0;i<this.hanynapotKeressen;i++)
     {
       let tomorrow = new Date();
       tomorrow.setDate(today.getDate()+i);
