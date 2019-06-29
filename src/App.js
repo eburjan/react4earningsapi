@@ -50,8 +50,16 @@ class App extends Component {
 
   queryOneDate=()=>
   {
+    //https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
+    // react+express: https://www.youtube.com/watch?v=TTZOoWfGjCo
+
+
     const actualdateindex=this.state.datumindex;
-    let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[actualdateindex];
+
+    //https://github.com/Rob--W/cors-anywhere/blob/440d2de180737ef6bb16d1b38aaa6b5ce31363a8/demo.html#L67-L70
+    //https://stackoverflow.com/questions/29670703/how-to-use-cors-anywhere-to-reverse-proxy-and-add-cors-headers
+    
+    let url="https://cors-anywhere.herokuapp.com/https://api.earningscalendar.net/?date="+this.state.daterange[actualdateindex];
     //let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex+2];
 /*
     axios({
