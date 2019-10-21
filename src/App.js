@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SearchBox from './SearchBox';
 import {tickerquery} from './tickerquery';
 import {tickerwatchlist} from './watchlist';
+import {alphavantageapikey} from './apikey';
 import { isUndefined } from 'util';
 import axios from 'axios'
 
@@ -36,7 +37,7 @@ class App extends Component {
   {
     if(this.state.earningsqueryrunning)return;
     this.state.lastuimode="CTR";
-    let url=`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${this.state.searchfield}&apikey=49A9CU1MD39A3K45`;
+    let url=`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${this.state.searchfield}&apikey=${alphavantageapikey}`;
     //console.log("url:"+url);
     fetch(url).then(response=>
     {
