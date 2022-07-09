@@ -38,12 +38,10 @@ class App extends Component {
     if(this.state.earningsqueryrunning)return;
     this.state.lastuimode="CTR";
     let url=`https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=${this.state.searchfield}&apikey=${alphavantageapikey}`;
-    //console.log("url:"+url);
     fetch(url).then(response=>
     {
         return response.json();
     }).then(tombelem=>{
-      //console.log(tombelem);
       this.state.metadata=tombelem;
         return this.setState({hanyszor: this.state.hanyszor+1});
     });
@@ -51,35 +49,15 @@ class App extends Component {
 
   queryOneDate=()=>
   {
-    //https://gist.github.com/jimmywarting/ac1be6ea0297c16c477e17f8fbe51347
-    // react+express: https://www.youtube.com/watch?v=TTZOoWfGjCo
-
-
-    const actualdateindex=this.state.datumindex;
-
-    //https://github.com/Rob--W/cors-anywhere/blob/440d2de180737ef6bb16d1b38aaa6b5ce31363a8/demo.html#L67-L70
-    //https://stackoverflow.com/questions/29670703/how-to-use-cors-anywhere-to-reverse-proxy-and-add-cors-headers
-    
-    let url="https://cors-anywhere.herokuapp.com/https://api.earningscalendar.net/?date="+this.state.daterange[actualdateindex];
-    //let url="https://cors.io/?https://api.earningscalendar.net/?date="+this.state.daterange[this.state.datumindex+2];
-/*
-    axios({
-      method:'get',
-      url:url
-    })
-      .then(function(response) {
-      console.log(response.text)
-    });*/
-
+    const actualdateindex=this.state.datumindex;  
+    let url="https://cors-anywhere.herokuapp.com/https://freeapi.earningscalendar.net/?date="+this.state.daterange[actualdateindex];
 
     console.log(Date.now()+", url:"+url);
     
     fetch(url).then(response=>
     {
-      //console.log(response.text);
         return response.json();
     }).then(tombelem=>{
-      //console.log(tombelem);
       return this.setState({queryresult: tombelem, querydate: this.state.daterange[actualdateindex]});
     }).catch(error=>{
       this.state.datumindex=this.hanynapotKeressen;
@@ -88,12 +66,10 @@ class App extends Component {
     
     this.state.datumindex++;
     if(this.state.datumindex<this.hanynapotKeressen){
-      //function() { startTimer(parm1); }
-      setTimeout(this.queryOneDate, 3000);
+      setTimeout(this.queryOneDate, 1500);
     }
   }
 
-  //https://api.earningscalendar.net/?date=20190412
   earningsclickhandler=()=>
   {
     this.state.lastuimode="EARNINGS";
@@ -139,7 +115,6 @@ class App extends Component {
         continue;
       }
       let subvaluesArray=Object.values(values[i]);
-      //console.log(subvaluesArray);
       WEEKLY_ATR_1.push(Math.abs(Number(subvaluesArray[1]-Number(subvaluesArray[2]))));
       if(isUndefined(mark))
       {
@@ -160,11 +135,6 @@ class App extends Component {
     WEEKLY_ATR_3_AVG/=count;
     WEEKLY_ATR_3_CTR=(WEEKLY_ATR_3_AVG+WEEKLY_ATR_3_MIN)/2;
 
-    //console.log(WEEKLY_ATR_1);
-    /*console.log(WEEKLY_ATR_3_MIN);
-    console.log(WEEKLY_ATR_3_AVG);
-    console.log(WEEKLY_ATR_3_CTR);*/
-
     return {
       "MIN": WEEKLY_ATR_3_MIN.toFixed(2),
       "MAX": WEEKLY_ATR_3_MAX.toFixed(2),
@@ -179,20 +149,16 @@ class App extends Component {
     {
       let tickerinfos=Object.values(this.state.queryresult);
       this.state.userresult.push(this.state.querydate);
-      //console.log(tickerinfos.length);
       for(let t=0;t<tickerinfos.length;t++)
       {
-        //console.log(tickerinfos[t]);
         let ticker=tickerinfos[t].ticker;
         let when=tickerinfos[t].when;
-        //console.log(ticker);console.log(when);
         if(tickerwatchlist.indexOf(ticker) > -1)
         {
           this.state.userresult.push(ticker+" ("+when+")");
         }
       }
       const resultcomponent=this.state.userresult.map(function(sv, i){
-        //console.log(String(sv));
         return <div key={i}>{sv}</div>;
       });
       return (
@@ -259,28 +225,3 @@ class App extends Component {
 }
 
 export default App;
-
-/*
-const entries = Object.entries(operatingSystem);
-entries.forEach(entry => {
-    let key = entry[0];
-    let value = entry[1];
-
-    console.log(`${key}: ${value}`);
-});
-Object.entries(obj) – returns an array of [key, value] pairs.
-
-WEEKLY series->
-
-[Y:1, 2, 6]
-N: 50, 100, 300
-WEEKLY_ATR_1->WEEKLY_ATR_3
-WEEKLY_ATR_3->WEEKLY_ATR_3_MIN,WEEKLY_ATR_3_AVG
-WEEKLY_ATR_3_MIN,WEEKLY_ATR_3_AVG->WEEKLY_ATR_3_CTR
-
-         MIN   AVG   CTR
-50:
-100:
-300:
-
-*/
